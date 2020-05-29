@@ -8,23 +8,32 @@
 
 import React from 'react';
 import {
+  Button,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
   StatusBar,
+  Alert,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Header, Colors} from 'react-native/Libraries/NewAppScreen';
+
+import {getItemAsync, setItemAsync} from 'expo-secure-store';
 
 const App: () => React$Node = () => {
+  const handleWrite = async () => {
+    const value = Math.random().toFixed(6).slice(-6);
+    await setItemAsync('session-token', value);
+    Alert.alert(`Value set to: ${value}`);
+  };
+
+  const handleRead = async () => {
+    const value = await getItemAsync('session-token');
+    Alert.alert(`The value was: ${value}`);
+  };
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -39,32 +48,8 @@ const App: () => React$Node = () => {
             </View>
           )}
           <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
+            <Button title="Write value" onPress={handleWrite} />
+            <Button title="Read value" onPress={handleRead} />
           </View>
         </ScrollView>
       </SafeAreaView>
